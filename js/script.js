@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (submitButton) submitButton.disabled = false;
         console.error("Enquiry submission error:", error);
       }
-
+    });
 
     /* ---------------------------------------------------------
        6.5 Clear / Reset Form
