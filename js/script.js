@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ---------------------------------------------------------
        6.2 Form Submission & Validation
        --------------------------------------------------------- */
-    form.addEventListener("submit", event => {
+    form.addEventListener("submit", async event => {
       event.preventDefault();
       clearErrors();
 
@@ -243,32 +243,83 @@ document.addEventListener("DOMContentLoaded", () => {
          6.4 Successful Submission Display
          Displays all submitted information in a structured format.
          ------------------------------------------------------- */
-      const requestedText = requested.length ? requested.join(", ") : "None selected";
+      const requestedText = requested.length
+        ? requested.join(", ")
+        : "None selected";
 
-      resultContent.innerHTML = `
-        <p><strong>Parent / Guardian Name:</strong> ${escapeHTML(parentName)}</p>
-        <p><strong>Email:</strong> ${escapeHTML(email)}</p>
-        <p><strong>Phone Number:</strong> ${escapeHTML(phone)}</p>
-        <p><strong>Student Name:</strong> ${escapeHTML(studentName)}</p>
-        <p><strong>Student Year / Class:</strong> ${escapeHTML(studentClass)}</p>
-        <p><strong>Enquiry Category:</strong> ${escapeHTML(category)}</p>
-        <p><strong>Information Requested:</strong> ${escapeHTML(requestedText)}</p>
-        <p><strong>Preferred Contact Method:</strong> ${escapeHTML(contactMethod.value)}</p>
-        <p><strong>Enquiry Message:</strong> ${escapeHTML(message)}</p>
-      `;
+      const payload = {
+        parentName,
+        email,
+        phone,
+        studentName,
+        studentClass,
+        category,
+        contactMethod: contactMethod.value,
+        requested,
+        message
+      };
 
-      if (alertBox) {
-        alertBox.classList.add("show");
-        alertBox.style.background = "#eaf7ee";
-        alertBox.style.borderColor = "#b9dfc5";
-        alertBox.style.color = "#175b2c";
-        alertBox.textContent = "Your enquiry has been submitted successfully.";
+      const GOOGLE_SCRIPT_URL =
+        "https://script.google.com/a/macros/oum.edu.my/s/AKfycbxFrbP3YKUOfc51SBnyZlNb7WaoVAcUauCNbWh6I6qoZOh4Wm9NEk2tlB6JVPwHP0diCA/exec";
+
+      const submitButton = form.querySelector(
+        "button[type='submit'], input[type='submit']"
+      );
+
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        resultContent.innerHTML = `
+          <p><strong>Parent / Guardian Name:</strong> ${escapeHTML(parentName)}</p>
+          <p><strong>Email:</strong> ${escapeHTML(email)}</p>
+          <p><strong>Phone Number:</strong> ${escapeHTML(phone)}</p>
+          <p><strong>Student Name:</strong> ${escapeHTML(studentName)}</p>
+          <p><strong>Student Year / Class:</strong> ${escapeHTML(studentClass)}</p>
+          <p><strong>Enquiry Category:</strong> ${escapeHTML(category)}</p>
+          <p><strong>Information Requested:</strong> ${escapeHTML(requestedText)}</p>
+          <p><strong>Preferred Contact Method:</strong> ${escapeHTML(contactMethod.value)}</p>
+          <p><strong>Enquiry Message:</strong> ${escapeHTML(message)}</p>
+        `;
+
+        if (alertBox) {
+          alertBox.classList.add("show");
+          alertBox.style.background = "#eaf7ee";
+          alertBox.style.borderColor = "#b9dfc5";
+          alertBox.style.color = "#175b2c";
+          alertBox.textContent =
+            "Your enquiry request was sent. Please verify that it appears in the records.";
+        }
+
+        form.style.display = "none";
+        result.style.display = "block";
+        result.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+      } catch (error) {
+        if (alertBox) {
+          alertBox.classList.add("show");
+          alertBox.style.background = "#fff4e5";
+          alertBox.style.borderColor = "#f2c078";
+          alertBox.style.color = "#7a3e00";
+          alertBox.textContent =
+            "The request could not be sent. Please try again.";
+        }
+
+        if (submitButton) submitButton.disabled = false;
+        console.error("Enquiry submission error:", error);
       }
 
-      form.style.display = "none";
-      result.style.display = "block";
-      result.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
 
     /* ---------------------------------------------------------
        6.5 Clear / Reset Form
