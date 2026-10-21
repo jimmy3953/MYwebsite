@@ -1,4 +1,125 @@
+/* =========================================================
+   CDWP2203 Introduction to Web Programming
+   Horizon International School — Shared JavaScript
+   Purpose: Navigation, accessibility, animations, slideshows,
+            activity filtering and Task 2 form validation.
+   ========================================================= */
 
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* =========================================================
+     1. Mobile Navigation
+     Opens and closes the navigation menu on smaller screens.
+     ========================================================= */
+  const toggle = document.querySelector(".nav-toggle");
+  const menu = document.querySelector(".nav-menu");
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      const open = menu.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+
+  /* =========================================================
+     2. Active Navigation Link
+     Highlights the link that matches the current webpage.
+     ========================================================= */
+  const page = location.pathname.split("/").pop() || "index.html";
+
+  document.querySelectorAll(".nav-menu a").forEach(link => {
+    if (link.getAttribute("href") === page) {
+      link.classList.add("active");
+    }
+  });
+
+  /* =========================================================
+     3. Scroll Reveal Animation
+     Reveals content when it enters the visible area.
+     ========================================================= */
+  
+  const reveals = document.querySelectorAll(".reveal");
+
+  // Make content visible first, so a failed observer cannot hide the page.
+  reveals.forEach(element => element.classList.add("visible"));
+
+  // Keep the reveal animation logic without risking permanently hidden content.
+  if ("IntersectionObserver" in window) {
+    try {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      reveals.forEach(element => observer.observe(element));
+    } catch (error) {
+      console.error("Reveal animation could not be initialized:", error);
+    }
+  }
+
+
+  /* =========================================================
+     4. Slideshow
+     Provides previous/next controls and automatic slide changes.
+     Used on the Home and News pages.
+     ========================================================= */
+  const slides = [...document.querySelectorAll(".slide")];
+  let currentSlide = 0;
+
+  const showSlide = index => {
+    if (!slides.length) return;
+
+    currentSlide = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, index) => {
+      slide.classList.toggle("active", index === currentSlide);
+    });
+  };
+
+  document.querySelectorAll("[data-slide='prev']").forEach(button => {
+    button.addEventListener("click", () => showSlide(currentSlide - 1));
+  });
+
+  document.querySelectorAll("[data-slide='next']").forEach(button => {
+    button.addEventListener("click", () => showSlide(currentSlide + 1));
+  });
+
+  if (slides.length > 1) {
+    showSlide(0);
+    setInterval(() => showSlide(currentSlide + 1), 6000);
+  }
+
+  /* =========================================================
+     5. Co-curricular Activity Filter
+     Filters activity cards by category without reloading the page.
+     ========================================================= */
+  const filterButtons = document.querySelectorAll(".filter-btn");
+  const activityCards = document.querySelectorAll(".activity-card");
+
+  filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      filterButtons.forEach(item => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
+      });
+
+      button.classList.add("active");
+      button.setAttribute("aria-pressed", "true");
+
+      const filter = button.dataset.filter;
+
+      activityCards.forEach(card => {
+        const shouldShow = filter === "all" || card.dataset.category === filter;
+        card.classList.toggle("hidden-card", !shouldShow);
+      });
+    });
+  });
+
+ 
   /* =========================================================
      6. Task 2 — Parent Enquiry Form + Google Sheets
      ========================================================= */
