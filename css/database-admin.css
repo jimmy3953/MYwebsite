@@ -1,4 +1,32 @@
-/* Database admin page: clear controls, responsive tables, and visible privacy warning. */
+/* Contact enquiries administration: spacious desktop layout with a readable scrollable table. */
+.db-admin-page {
+  overflow-x: hidden;
+}
+
+.db-container {
+  width: calc(100% - 48px);
+  max-width: 1560px;
+}
+
+.db-admin-section {
+  padding: 48px 0 72px;
+}
+
+.db-page-banner {
+  padding: 58px 0;
+}
+
+.db-page-banner h1 {
+  font-size: clamp(1.9rem, 2.8vw, 2.15rem);
+  line-height: 1.2;
+}
+
+.db-page-banner p,
+.db-admin-page .note {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
 .db-warning {
   border: 1px solid #d89a3d;
   background: #fff8ec;
@@ -6,39 +34,218 @@
   padding: 18px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
+  font-size: 0.98rem;
+  line-height: 1.6;
 }
+
 .db-warning p { margin: 8px 0 0; }
 .db-warning code { overflow-wrap: anywhere; }
-.db-connect, .db-workspace, .db-editor { margin-bottom: 24px; }
+
+.db-connect,
+.db-workspace,
+.db-editor {
+  max-width: none;
+  margin: 0 0 24px;
+  padding: 28px 30px;
+}
+
+.db-workspace { padding-bottom: 30px; }
+
 .db-section-heading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-bottom: 22px;
 }
-.db-section-heading h2, .db-connect h2 { margin-top: 0; }
-.db-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.db-status { margin: 16px 0 0; padding: 12px 14px; border-radius: 8px; background: #f1f5f9; color: #25364a; overflow-wrap: anywhere; }
+
+.db-section-heading > :first-child { flex: 1 1 360px; }
+
+.db-section-heading h2,
+.db-connect h2 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  line-height: 1.3;
+}
+
+.db-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.db-section-heading .db-actions { margin-left: auto; }
+
+.db-admin-page .btn,
+#recordsTable button {
+  min-height: 44px;
+  padding: 10px 16px;
+  line-height: 1.2;
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.db-admin-page .btn:hover,
+#recordsTable button:hover { transform: translateY(-1px); }
+
+.db-admin-page .btn:focus-visible,
+#recordsTable button:focus-visible,
+#sheetSelect:focus-visible {
+  outline: 3px solid rgba(40, 105, 166, .36);
+  outline-offset: 2px;
+}
+
+.db-status {
+  margin: 18px 0 0;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #25364a;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 .db-status.success { background: #eaf7ee; color: #175b2c; }
 .db-status.error { background: #fff0ef; color: #8a251f; }
-.db-table-wrap { overflow: auto; max-width: 100%; margin-top: 12px; }
-#recordsTable { width: 100%; border-collapse: collapse; min-width: 620px; background: #fff; }
-#recordsTable th, #recordsTable td { border: 1px solid #dce3ea; text-align: left; padding: 10px 12px; vertical-align: top; max-width: 300px; overflow-wrap: anywhere; }
-#recordsTable th { background: #edf3f8; color: #17324d; font-weight: 800; }
+
+.db-workspace .field { max-width: none; margin-bottom: 12px; }
+.db-workspace .field label { font-size: 0.97rem; }
+
+#sheetSelect {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+#recordsSummary {
+  margin: 14px 0 0;
+  font-size: 0.98rem;
+}
+
+.db-table-wrap {
+  max-width: 100%;
+  margin-top: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid #d6e0e8;
+  border-radius: 12px;
+  scrollbar-color: #8197aa #eef3f7;
+  scrollbar-width: thin;
+}
+
+#recordsTable {
+  width: 100%;
+  min-width: 1455px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  background: #fff;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+#recordsTable th,
+#recordsTable td {
+  padding: 15px 16px;
+  border: 0;
+  border-right: 1px solid #e0e7ee;
+  border-bottom: 1px solid #dce5ed;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+}
+
+#recordsTable th {
+  background: #edf3f8;
+  color: #17324d;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+#recordsTable td { color: #263746; }
+
+#recordsTable th:last-child,
+#recordsTable td:last-child { border-right: 0; }
+
 #recordsTable tbody tr:nth-child(even) { background: #f8fafc; }
-#recordsTable .db-row-selected { outline: 2px solid #346c9f; outline-offset: -2px; background: #edf6ff; }
-#recordsTable button { padding: 6px 10px; border: 1px solid #c3d1df; border-radius: 6px; cursor: pointer; background: #fff; color: #17324d; font-weight: 700; }
-.db-selected-label { font-size: .9rem; color: #475569; background: #f1f5f9; border-radius: 6px; padding: 7px 10px; }
-.db-editor-actions { margin-top: 20px; }
+#recordsTable tbody tr:hover { background: #f0f7fc; }
+#recordsTable tbody tr:last-child td { border-bottom: 0; }
+
+#recordsTable th:nth-child(1), #recordsTable td:nth-child(1) { min-width: 145px; }
+#recordsTable th:nth-child(2), #recordsTable td:nth-child(2) { min-width: 180px; overflow-wrap: anywhere; }
+#recordsTable th:nth-child(3), #recordsTable td:nth-child(3) { min-width: 120px; }
+#recordsTable th:nth-child(4), #recordsTable td:nth-child(4) { min-width: 145px; }
+#recordsTable th:nth-child(5), #recordsTable td:nth-child(5) { min-width: 140px; }
+#recordsTable th:nth-child(6), #recordsTable td:nth-child(6) { min-width: 140px; }
+#recordsTable th:nth-child(7), #recordsTable td:nth-child(7) { min-width: 160px; }
+#recordsTable th:nth-child(8), #recordsTable td:nth-child(8) { min-width: 145px; }
+#recordsTable th:nth-child(9), #recordsTable td:nth-child(9) { min-width: 190px; overflow-wrap: anywhere; }
+#recordsTable th:last-child, #recordsTable td:last-child { min-width: 90px; white-space: nowrap; }
+
+#recordsTable .db-row-selected {
+  outline: 2px solid #346c9f;
+  outline-offset: -2px;
+  background: #e8f4ff;
+}
+
+#recordsTable button {
+  min-width: 68px;
+  border: 1px solid #aebfce;
+  border-radius: 8px;
+  background: #fff;
+  color: #17324d;
+  font-weight: 800;
+}
+
+#recordsTable button:hover {
+  background: #eaf5ff;
+  border-color: #5f88aa;
+}
+
+.db-selected-label {
+  font-size: 0.94rem;
+  color: #475569;
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 8px 11px;
+  white-space: nowrap;
+}
+
+.db-editor-actions { margin-top: 22px; }
 .btn.danger { background: #a52c2c; color: #fff; border-color: #a52c2c; }
 #recordFields .field { min-width: 0; }
 #recordFields input, #recordFields textarea { width: 100%; box-sizing: border-box; }
-#recordFields textarea { min-height: 100px; resize: vertical; }
-#recordsSummary { margin-top: 14px; }
-@media (max-width: 700px) {
-  .db-warning { padding: 14px; }
-  #recordsTable th, #recordsTable td { padding: 8px; }
+#recordFields textarea { min-height: 110px; resize: vertical; }
+
+@media (max-width: 1100px) {
+  .db-container { width: calc(100% - 40px); }
+  .db-admin-section { padding-top: 38px; }
+  .db-connect, .db-workspace, .db-editor { padding: 24px; }
+}
+
+@media (max-width: 760px) {
+  .db-container { width: calc(100% - 28px); }
+  .db-page-banner { padding: 42px 0; }
+  .db-page-banner h1 { font-size: 1.9rem; }
+  .db-admin-section { padding: 30px 0 52px; }
+  .db-warning, .db-connect, .db-workspace, .db-editor { padding: 18px; }
+  .db-section-heading { align-items: flex-start; gap: 14px; }
+  .db-section-heading .db-actions { width: 100%; margin-left: 0; }
+  .db-section-heading .db-actions .btn { flex: 1 1 150px; }
+  .db-actions { gap: 8px; }
   .db-editor-actions > button, .db-connect .db-actions > button { width: 100%; }
+  #recordsTable th, #recordsTable td { padding: 13px 14px; }
+  .db-table-wrap { margin-top: 16px; border-radius: 10px; }
+}
+
+@media (max-width: 460px) {
+  .db-container { width: calc(100% - 24px); }
+  .db-warning, .db-connect, .db-workspace, .db-editor { padding: 16px; }
+  .db-page-banner h1 { font-size: 1.75rem; }
+  .db-section-heading .db-actions .btn { flex-basis: 100%; }
+  .db-selected-label { white-space: normal; }
 }
