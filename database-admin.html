@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Authorized administration for non-sensitive CDWS workbook records.">
+  <title>Database Admin | Horizon International School</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/database-admin.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="container"><span>Horizon International School</span><span>Authorized Database Admin</span></div>
+  </div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Horizon International School home">
+        <span class="logo" aria-hidden="true">HIS</span>
+        <span>Horizon International School<small>Workbook Management</small></span>
+      </a>
+      <nav aria-label="Main navigation"><ul class="nav-menu open">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="teachers.html">Teachers</a></li>
+        <li><a href="activities.html">Activities</a></li>
+        <li><a href="facilities.html">Facilities</a></li>
+        <li><a href="news.html">News & Events</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul></nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="page-banner"><div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Database Admin</div>
+      <h1>CDWS Database Management</h1>
+      <p>View, create, edit and delete rows in the workbook's worksheets.</p>
+    </div></section>
+    <section class="section">
+      <div class="container">
+        <div class="db-warning" role="note">
+          <strong>Public workbook warning</strong>
+          <p>This repository and <code>CDWS_Database.xlsx</code> are public. Any data saved to that workbook becomes publicly downloadable and remains in Git history. Use this screen only for non-sensitive school website content. Do not save parent/guardian contact details, student names, private enquiries, credentials or other personal information here.</p>
+        </div>
+
+        <section class="card form-card db-connect">
+          <h2>Connect to database</h2>
+          <p class="note">The API must be deployed before this screen can write to GitHub.</p>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="apiUrl">Cloudflare Worker API URL</label>
+              <input id="apiUrl" type="url" placeholder="https://your-worker.your-account.workers.dev" autocomplete="url">
+            </div>
+            <div class="field full">
+              <label for="adminKey">Admin API key</label>
+              <input id="adminKey" type="password" placeholder="Enter your private admin key" autocomplete="current-password">
+              <p class="note">The key is used in this page's current session and is not written to the repository.</p>
+            </div>
+            <div class="field full db-actions">
+              <button class="btn" id="connectButton" type="button">Connect</button>
+              <button class="btn outline" id="disconnectButton" type="button">Disconnect</button>
+            </div>
+          </div>
+          <p id="dbStatus" class="db-status" role="status" aria-live="polite">Not connected. Deploy the Worker and enter its URL and your admin key.</p>
+        </section>
+
+        <section class="card form-card db-workspace">
+          <div class="db-section-heading">
+            <div><h2>Workbook records</h2><p class="note">Select a worksheet to load the current records.</p></div>
+            <div class="db-actions">
+              <button class="btn secondary" id="refreshButton" type="button" disabled>Refresh</button>
+              <button class="btn" id="newButton" type="button" disabled>+ New record</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="sheetSelect">Worksheet</label>
+            <select id="sheetSelect" disabled><option value="">Connect first</option></select>
+          </div>
+          <div id="recordsSummary" class="note">No worksheet loaded.</div>
+          <div class="db-table-wrap">
+            <table id="recordsTable">
+              <thead><tr><th>Records will appear here</th></tr></thead>
+              <tbody><tr><td>Connect to the API, then choose a worksheet.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card form-card db-editor" id="editorSection">
+          <div class="db-section-heading">
+            <div><h2 id="editorTitle">Create or edit record</h2><p class="note">Fields follow the selected worksheet's row 1 column headers.</p></div>
+            <span id="selectedRecordLabel" class="db-selected-label">No row selected</span>
+          </div>
+          <form id="recordForm">
+            <div id="recordFields" class="form-grid">
+              <p class="note">Connect and select a worksheet to load fields.</p>
+            </div>
+            <div class="db-actions db-editor-actions">
+              <button class="btn" id="saveButton" type="submit" disabled>Save record</button>
+              <button class="btn outline" id="clearButton" type="button" disabled>Clear form</button>
+              <button class="btn danger" id="deleteButton" type="button" disabled>Delete selected record</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-bottom">© <span data-year></span> Horizon International School · Database Administration</div></footer>
+  <script src="js/database-config.js"></script>
+  <script src="js/database-admin.js"></script>
+</body>
+</html>
