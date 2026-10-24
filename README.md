@@ -9,19 +9,20 @@
 6. `news.html` — News, Events & Achievements
 7. `contact.html` — Contact / Parent Enquiry
 8. `database-admin.html` — Authorized workbook CRUD dashboard
+9. `content.html` — Website content entry form that inserts rows into the workbook
 
 ## Supporting files
 - `css/style.css` — shared responsive styling
 - `css/database-admin.css` — workbook dashboard styling
 - `js/script.js` — navigation, animation, slideshows, activity filtering and enquiry form
-- `js/database-config.js` — deployed workbook API URL
+- `js/database-config.js` — local workbook API URL
 - `js/database-admin.js` — browser CRUD client
-- `database/worker/` — Cloudflare Worker API to read and update the workbook with a GitHub token kept as a server-side secret
+- `database/server.py` — local Python standard-library API that reads and updates the workbook file directly
 
 ## Database connection
-The repository currently contains **`CDWS_Database.xlsx`** on the `main` branch. It does not contain a file named `CDWS_databse.xlsm`. The new CRUD dashboard targets the actual existing `.xlsx` file. Follow [database/README.md](database/README.md) for the one-time Cloudflare Worker deployment steps. Until the Worker is deployed, its URL is configured in `js/database-config.js`, and the GitHub token/admin key are configured as Cloudflare Worker secrets, the CRUD dashboard will not be connected.
+The CRUD dashboard reads and writes **`CDWS_Database.xlsx`** on this computer. Run `python database/server.py`; it opens the admin page and connects automatically. See [database/README.md](database/README.md) for details. It uses only Python's standard library and requires no package installation.
 
-**Privacy warning:** this repository is public, so the workbook and every committed update are publicly downloadable and visible in Git history. Use it only for non-sensitive website content. Do not store parent/guardian contact information, student information, private enquiries, passwords, or confidential data in this workbook. The Contact page is not redirected to this public workbook.
+**Privacy:** this repository and workbook are public. Contact form submissions are saved to the workbook's `Contact Enquiries` sheet. Use fictional assignment data only; do not enter real parent/guardian or student information.
 
 ## Existing project requirements
 - One Home Page plus six additional pages
@@ -37,4 +38,4 @@ The repository currently contains **`CDWS_Database.xlsx`** on the `main` branch.
 The school, staff names, statistics and calendar entries are fictional website content created for the assignment prototype. Existing school page content is hard-coded in the HTML; the new dashboard manages workbook rows but does not yet re-render those static page sections from workbook records. The worksheet schema and page-to-sheet mapping should be defined before migrating page content.
 
 ## Task 2 — Online Parent Enquiry Form
-The Contact / Parent Enquiry page includes parent/guardian name, email, phone, student name, year/class, enquiry category, preferred contact method, information requested, enquiry message, JavaScript validation and submitted-data display. It currently posts to the existing Google Apps Script endpoint in `js/script.js`. Review that endpoint's access permissions and the destination spreadsheet before using real parent/student data.
+The Contact / Parent Enquiry page validates submissions and saves them through the local Python API to the `Contact Enquiries` worksheet in `CDWS_Database.xlsx`. Keep the local server running while submitting enquiries. Use fictional data because workbook updates can be committed to a public repository.

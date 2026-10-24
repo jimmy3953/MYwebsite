@@ -1,2 +1,2 @@
-/* Set this to your deployed Cloudflare Worker URL, e.g. https://cdws-workbook-crud-api.<account>.workers.dev */
-window.CDWS_DATABASE_API = "";
+/* The local Python server serves this page and the API from the same origin. */
+window.CDWS_DATABASE_API = window.location.origin;

@@ -32,40 +32,31 @@
   <main id="main-content">
     <section class="page-banner"><div class="container">
       <div class="breadcrumb"><a href="index.html">Home</a> / Database Admin</div>
-      <h1>CDWS Database Management</h1>
-      <p>View, create, edit and delete rows in the workbook's worksheets.</p>
+      <h1>Contact Enquiries Management</h1>
+      <p>View, create, edit and delete parent enquiry submissions.</p>
     </div></section>
     <section class="section">
       <div class="container">
         <div class="db-warning" role="note">
-          <strong>Public workbook warning</strong>
-          <p>This repository and <code>CDWS_Database.xlsx</code> are public. Any data saved to that workbook becomes publicly downloadable and remains in Git history. Use this screen only for non-sensitive school website content. Do not save parent/guardian contact details, student names, private enquiries, credentials or other personal information here.</p>
+          <strong>Assignment data only</strong>
+          <p><code>CDWS_Database.xlsx</code> is stored in this project. Use fictional test data only and do not enter confidential parent, student or contact information.</p>
         </div>
 
         <section class="card form-card db-connect">
           <h2>Connect to database</h2>
-          <p class="note">The API must be deployed before this screen can write to GitHub.</p>
-          <div class="form-grid">
-            <div class="field full">
-              <label for="apiUrl">Cloudflare Worker API URL</label>
-              <input id="apiUrl" type="url" placeholder="https://your-worker.your-account.workers.dev" autocomplete="url">
-            </div>
-            <div class="field full">
-              <label for="adminKey">Admin API key</label>
-              <input id="adminKey" type="password" placeholder="Enter your private admin key" autocomplete="current-password">
-              <p class="note">The key is used in this page's current session and is not written to the repository.</p>
-            </div>
-            <div class="field full db-actions">
-              <button class="btn" id="connectButton" type="button">Connect</button>
-              <button class="btn outline" id="disconnectButton" type="button">Disconnect</button>
-            </div>
+          <p class="note">The local server connects automatically when this page opens. Keep the Python server running.</p>
+          <input id="apiUrl" type="hidden">
+          <input id="adminKey" type="hidden">
+          <div class="db-actions">
+            <button class="btn" id="connectButton" type="button">Reconnect</button>
+            <button class="btn outline" id="disconnectButton" type="button">Disconnect</button>
           </div>
-          <p id="dbStatus" class="db-status" role="status" aria-live="polite">Not connected. Deploy the Worker and enter its URL and your admin key.</p>
+          <p id="dbStatus" class="db-status" role="status" aria-live="polite">Connecting to the local workbook...</p>
         </section>
 
         <section class="card form-card db-workspace">
           <div class="db-section-heading">
-            <div><h2>Workbook records</h2><p class="note">Select a worksheet to load the current records.</p></div>
+            <div><h2>Contact enquiry records</h2><p class="note">All submissions from the Contact page are stored here.</p></div>
             <div class="db-actions">
               <button class="btn secondary" id="refreshButton" type="button" disabled>Refresh</button>
               <button class="btn" id="newButton" type="button" disabled>+ New record</button>
@@ -86,7 +77,7 @@
 
         <section class="card form-card db-editor" id="editorSection">
           <div class="db-section-heading">
-            <div><h2 id="editorTitle">Create or edit record</h2><p class="note">Fields follow the selected worksheet's row 1 column headers.</p></div>
+            <div><h2 id="editorTitle">Create or edit enquiry</h2><p class="note">This form uses the same fields and choices as the Contact page.</p></div>
             <span id="selectedRecordLabel" class="db-selected-label">No row selected</span>
           </div>
           <form id="recordForm">

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Add website content to the local CDWS workbook.">
+  <title>Add Website Content | Horizon International School</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/database-admin.css">
+</head>
+<body>
+  <div class="topbar"><div class="container"><span>Horizon International School</span><span>Local Website Content Entry</span></div></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Horizon International School home">
+        <span class="logo" aria-hidden="true">HIS</span>
+        <span>Horizon International School<small>Content Management</small></span>
+      </a>
+      <nav aria-label="Main navigation"><ul class="nav-menu open">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="database-admin.html">Database Admin</a></li>
+      </ul></nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="page-banner"><div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Add Website Content</div>
+      <h1>Add Website Content</h1>
+      <p>Save a new content record to the local workbook.</p>
+    </div></section>
+    <section class="section"><div class="container">
+      <div class="db-warning" role="note">
+        <strong>Local workbook notice</strong>
+        <p>This form saves to <code>CDWS_Database.xlsx</code> on this computer. The workbook is tracked in a public repository, so do not enter personal or confidential information.</p>
+      </div>
+
+      <section class="card form-card db-connect" id="contentConnectSection">
+        <h2>Connecting to the local database</h2>
+        <p class="note">The local server connects this page automatically. Keep the Python server running.</p>
+      </section>
+
+      <section class="card form-card db-editor" id="contentEntrySection" hidden>
+        <div class="db-section-heading">
+          <div><h2>New content record</h2><p class="note">Saving adds a new row to the <strong>Website Content</strong> worksheet.</p></div>
+          <button class="btn outline" id="contentDisconnectButton" type="button">Disconnect</button>
+        </div>
+        <form id="contentForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="contentPage">Page</label>
+              <select id="contentPage" name="Page" required>
+                <option value="">Choose a page</option>
+                <option>Home</option><option>About</option><option>Teachers</option>
+                <option>Activities</option><option>Facilities</option><option>News</option>
+                <option>Contact</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="contentSection">Section</label>
+              <input id="contentSection" name="Section" type="text" required>
+            </div>
+            <div class="field full">
+              <label for="contentTitle">Title</label>
+              <input id="contentTitle" name="Title" type="text" required>
+            </div>
+            <div class="field full">
+              <label for="contentBody">Content</label>
+              <textarea id="contentBody" name="Content" rows="7" required></textarea>
+            </div>
+            <div class="field">
+              <label for="contentCategory">Category</label>
+              <input id="contentCategory" name="Category" type="text">
+            </div>
+            <div class="field">
+              <label for="contentOrder">Display Order</label>
+              <input id="contentOrder" name="Display Order" type="number" min="0" step="1" value="0">
+            </div>
+            <div class="field">
+              <label for="contentStatus">Status</label>
+              <select id="contentStatus" name="Status"><option>Draft</option><option>Published</option></select>
+            </div>
+          </div>
+          <div class="db-actions db-editor-actions">
+            <button class="btn" id="contentSaveButton" type="submit">Save content</button>
+            <button class="btn outline" type="reset">Clear form</button>
+          </div>
+        </form>
+      </section>
+      <p id="contentStatusMessage" class="db-status" role="status" aria-live="polite">Start the local server and connect to enter content.</p>
+    </div></section>
+  </main>
+  <footer class="footer"><div class="container footer-bottom">Â© <span data-year></span> Horizon International School Â· Content Entry</div></footer>
+  <script src="js/database-config.js"></script>
+  <script src="js/content-entry.js"></script>
+</body>
+</html>

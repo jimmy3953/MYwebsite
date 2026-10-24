@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
  
   /* =========================================================
-     6. Task 2 — Parent Enquiry Form + Google Sheets
+     6. Task 2 — Parent Enquiry Form + local private database
      ========================================================= */
   const form = document.getElementById("enquiryForm");
 
@@ -129,9 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const alertBox = document.getElementById("formAlert");
     const result = document.getElementById("submittedData");
     const resultContent = document.getElementById("submittedDataContent");
-
-    const GOOGLE_SCRIPT_URL =
-      "https://script.google.com/a/macros/oum.edu.my/s/AKfycbxFrbP3YKUOfc51SBnyZlNb7WaoVAcUauCNbWh6I6qoZOh4Wm9NEk2tlB6JVPwHP0diCA/exec";
 
     const setError = (id, message) => {
       const element = document.getElementById(id);
@@ -187,14 +184,19 @@ document.addEventListener("DOMContentLoaded", () => {
       ].map(item => item.value);
 
       let valid = true;
+      const validationMessages = [];
 
       if (!parentName) {
-        setError("parentNameError", "Please enter the parent / guardian name.");
+        const error = "Please enter the parent / guardian name.";
+        setError("parentNameError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        setError("parentEmailError", "Please enter a valid email address.");
+        const error = "Please enter a valid email address.";
+        setError("parentEmailError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
@@ -202,40 +204,51 @@ document.addEventListener("DOMContentLoaded", () => {
       const phoneValid = /^(?:01\d{8,9}|601\d{8,9})$/.test(phoneDigits);
 
       if (!phone || !phoneValid) {
-        setError("phoneNumberError", "Please enter a valid Malaysian phone number.");
+        const error = "Please enter a valid Malaysian phone number.";
+        setError("phoneNumberError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!studentName) {
-        setError("studentNameError", "Please enter the student name.");
+        const error = "Please enter the student name.";
+        setError("studentNameError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!studentClass) {
-        setError("studentClassError", "Please select the student year / class.");
+        const error = "Please select the student year / class.";
+        setError("studentClassError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!category) {
-        setError("enquiryCategoryError", "Please select an enquiry category.");
+        const error = "Please select an enquiry category.";
+        setError("enquiryCategoryError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!contactMethod) {
-        setError("contactMethodError", "Please select a preferred contact method.");
+        const error = "Please select a preferred contact method.";
+        setError("contactMethodError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!message) {
-        setError("enquiryMessageError", "Please enter your enquiry message.");
+        const error = "Please enter your enquiry message.";
+        setError("enquiryMessageError", error);
+        validationMessages.push(error);
         valid = false;
       }
 
       if (!valid) {
-        showAlert(
-          "Please complete all required fields and correct the highlighted information."
-        );
-        alert("Please complete all required fields.");
+        const error = validationMessages.join(" ");
+        showAlert(error);
+        window.alert("Error: " + error);
         return;
       }
 
@@ -249,48 +262,40 @@ document.addEventListener("DOMContentLoaded", () => {
         informationRequested: requested.join(", "),
         contactMethod: contactMethod.value,
         message,
-        submittedAt: new Date().toISOString()
       };
-
-      // Display submitted information safely on the page.
-      if (resultContent) {
-        resultContent.innerHTML = `
-          <p><strong>Parent / Guardian Name:</strong> ${escapeHTML(parentName)}</p>
-          <p><strong>Email:</strong> ${escapeHTML(email)}</p>
-          <p><strong>Phone Number:</strong> ${escapeHTML(phone)}</p>
-          <p><strong>Student Name:</strong> ${escapeHTML(studentName)}</p>
-          <p><strong>Student Year / Class:</strong> ${escapeHTML(studentClass)}</p>
-          <p><strong>Enquiry Category:</strong> ${escapeHTML(category)}</p>
-          <p><strong>Information Requested:</strong> ${escapeHTML(submittedData.informationRequested || "None selected")}</p>
-          <p><strong>Preferred Contact Method:</strong> ${escapeHTML(contactMethod.value)}</p>
-          <p><strong>Enquiry Message:</strong> ${escapeHTML(message)}</p>
-        `;
-      }
 
       const submitButton = form.querySelector(
         "button[type='submit'], input[type='submit']"
       );
       if (submitButton) submitButton.disabled = true;
 
-      showAlert("Your enquiry is displayed below. Sending a copy to Google Sheets…");
+      showAlert("Saving your enquiry to CDWS_Database.xlsx...");
 
       try {
-        const payload = new URLSearchParams();
-
-        Object.entries(submittedData).forEach(([key, value]) => {
-          payload.append(key, value == null ? "" : String(value));
-        });
-
-        await fetch(GOOGLE_SCRIPT_URL, {
+        const response = await fetch(window.CDWS_DATABASE_API + "/api/enquiries", {
           method: "POST",
-          mode: "no-cors",
-          body: payload
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(submittedData)
         });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || payload.ok === false) {
+          throw new Error(payload.error || "CDWS_Database.xlsx could not save your enquiry.");
+        }
 
-        // no-cors cannot confirm whether Apps Script saved the row.
-        showAlert(
-          "Your enquiry is displayed below. Please check Google Sheets to confirm that the enquiry was saved."
-        );
+        if (resultContent) {
+          resultContent.innerHTML = `
+            <p><strong>Parent / Guardian Name:</strong> ${escapeHTML(parentName)}</p>
+            <p><strong>Email:</strong> ${escapeHTML(email)}</p>
+            <p><strong>Phone Number:</strong> ${escapeHTML(phone)}</p>
+            <p><strong>Student Name:</strong> ${escapeHTML(studentName)}</p>
+            <p><strong>Student Year / Class:</strong> ${escapeHTML(studentClass)}</p>
+            <p><strong>Enquiry Category:</strong> ${escapeHTML(category)}</p>
+            <p><strong>Information Requested:</strong> ${escapeHTML(submittedData.informationRequested || "None selected")}</p>
+            <p><strong>Preferred Contact Method:</strong> ${escapeHTML(contactMethod.value)}</p>
+            <p><strong>Enquiry Message:</strong> ${escapeHTML(message)}</p>
+          `;
+        }
+        showAlert("Your enquiry was saved to the Contact Enquiries worksheet.", true);
 
         if (result) {
           result.style.display = "block";
@@ -298,17 +303,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         form.style.display = "none";
+        window.alert("Success: Your enquiry was saved to CDWS_Database.xlsx.");
       } catch (error) {
-        console.error("Google Sheets submission error:", error);
-
-        showAlert(
-          "Your enquiry is displayed below, but the request to Google Sheets could not be sent. Please check the connection and try again."
-        );
-
-        if (result) {
-          result.style.display = "block";
-          result.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        const message = error.message + " Start the local server and keep the form open so you can retry.";
+        showAlert(message);
+        window.alert("Error: " + message);
       } finally {
         if (submitButton) submitButton.disabled = false;
       }

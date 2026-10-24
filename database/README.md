@@ -1,45 +1,31 @@
-# CDWS workbook CRUD connection
+# Local workbook CRUD
 
-The project repository currently contains **`CDWS_Database.xlsx`** on branch `main`. There is no `CDWS_databse.xlsm` file in the repository as named in the request. The Worker is configured for the existing .xlsx file. It intentionally refuses .xlsm files because writing through ExcelJS may not preserve VBA macros.
+The admin dashboard reads and writes `../CDWS_Database.xlsx` through `server.py`. The server uses only Python's standard library; no npm, pip, Cloudflare account, GitHub token, or network database is required.
 
-## Important privacy note
+## Start the dashboard
 
-The repository is public. Anything committed into `CDWS_Database.xlsx` is publicly downloadable, including every previous version in Git history. **Do not store parent/guardian names, phone numbers, email addresses, student names, or private enquiry messages in this workbook.** The existing contact enquiry form is not redirected to this public workbook. Use a private database or access-controlled Google Sheet for those records.
+Python 3 must be available. In PowerShell, from the project folder, run:
 
-## What is included
+```powershell
+python database/server.py
+```
 
-- `worker/src/index.js`: Cloudflare Worker API that reads and writes the repository workbook using GitHub's Contents API.
-- `worker/package.json` and `worker/wrangler.toml`: deployment configuration.
-- `../database-admin.html` and `../js/database-admin.js`: admin screen to list workbook worksheets and create, update, and delete rows.
-- `../js/database-config.js`: endpoint setting used by the admin screen.
+If `python` is not recognized on Windows, try `py -3 database/server.py`. Keep the terminal open. The server automatically opens the admin dashboard and creates the browser session; there is no key to copy or paste. You can also open `http://127.0.0.1:3000/database-admin.html` manually.
 
-The API operates on worksheets and row-1 column headers already present in the workbook. Row 1 must contain column names. The admin page is for non-sensitive website content only.
+Use **New record** to insert a row, **Edit** and **Save changes** to update it, or **Delete selected record** to remove it. Changes are written directly to the workbook file on this computer. Stop the server with `Ctrl+C`.
 
-## Deployment (one-time setup)
+For a focused insert form, open `content.html` from the running local site. It connects automatically and saves new records to the `Website Content` worksheet.
 
-1. Create a Cloudflare account and install Node.js/npm if not already installed.
-2. Open a terminal in `database/worker`, then run:
-   `npm install`
-3. In GitHub, create a fine-grained Personal Access Token scoped to **only** `jimmy3953/MYwebsite` with **Contents: Read and write**. Do not paste this token into any source file.
-4. Run `npx wrangler secret put GITHUB_TOKEN` and paste that token into the prompt.
-5. Generate a separate random admin key at least 24 characters long. Run `npx wrangler secret put ADMIN_API_KEY` and paste the key. Do not commit it.
-6. Run `npm run deploy` and copy the Worker URL (usually ending in `.workers.dev`).
-7. Edit `js/database-config.js` and set `window.CDWS_DATABASE_API` to that URL, then commit the change to GitHub.
-8. Open `database-admin.html` on the deployed site, enter the same admin key and click **Connect**.
+The server listens only on `127.0.0.1`. If port 3000 is already in use, set another port before starting it, for example `$env:PORT = "3001"; python database/server.py`, then open the matching `127.0.0.1:3001` URL.
 
-Cloudflare Worker variables are specified in `wrangler.toml`. The allowed website origins include `https://jimmy3953.github.io` and local development URLs. If your site uses a different origin, update `ALLOWED_ORIGINS` before deploying.
+## Workbook schema
 
-## API
+The `Website Content` worksheet uses row 1 for `Page`, `Section`, `Title`, `Content`, `Category`, `Display Order`, and `Status`. Other worksheets can be managed if they also have headers in row 1. The school pages remain static HTML; records do not automatically appear in those pages.
 
-- `GET /api/health` – service check.
-- `GET /api/tables` – worksheet names and header information (requires admin key).
-- `GET /api/records?sheet=SheetName` – records from one worksheet (requires admin key).
-- `POST /api/records` with `{ "action": "create", "sheet": "...", "record": { ... } }`.
-- `POST /api/records` with `{ "action": "update", "sheet": "...", "rowNumber": 2, "record": { ... } }`.
-- `POST /api/records` with `{ "action": "delete", "sheet": "...", "rowNumber": 2 }`.
+## Contact enquiries
 
-Every write creates a GitHub commit. Avoid simultaneous writes; refresh if the API reports a concurrent workbook edit.
+The `Contact Enquiries` worksheet contains parent/guardian name, email, phone, student name and class, category, requested information, preferred contact method, message, and submission time. The Contact form inserts each submission into this sheet without needing the admin key. The local server accepts submissions only from the local website. Because this workbook is in a public repository, use fictional assignment data only. Admins can review submissions from the Database Admin page.
 
-## Current scope
+## Privacy and backups
 
-This adds a working integration layer and CRUD admin screen for the workbook. The existing school pages still contain hard-coded prototype content; they do not automatically re-render from the workbook until each page's content sections are migrated to a defined worksheet schema. That migration should be done after the workbook's columns and intended page mapping are confirmed.
+The workbook is tracked in this repository, so committing it makes its contents public and stores prior versions in Git history. Keep personal or confidential data out of it. Back up the workbook before bulk edits. Close it in Excel before saving records from the dashboard.
