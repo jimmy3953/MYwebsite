@@ -1,0 +1,44 @@
+/* Database admin page: clear controls, responsive tables, and visible privacy warning. */
+.db-warning {
+  border: 1px solid #d89a3d;
+  background: #fff8ec;
+  color: #563b14;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.db-warning p { margin: 8px 0 0; }
+.db-warning code { overflow-wrap: anywhere; }
+.db-connect, .db-workspace, .db-editor { margin-bottom: 24px; }
+.db-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.db-section-heading h2, .db-connect h2 { margin-top: 0; }
+.db-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.db-status { margin: 16px 0 0; padding: 12px 14px; border-radius: 8px; background: #f1f5f9; color: #25364a; overflow-wrap: anywhere; }
+.db-status.success { background: #eaf7ee; color: #175b2c; }
+.db-status.error { background: #fff0ef; color: #8a251f; }
+.db-table-wrap { overflow: auto; max-width: 100%; margin-top: 12px; }
+#recordsTable { width: 100%; border-collapse: collapse; min-width: 620px; background: #fff; }
+#recordsTable th, #recordsTable td { border: 1px solid #dce3ea; text-align: left; padding: 10px 12px; vertical-align: top; max-width: 300px; overflow-wrap: anywhere; }
+#recordsTable th { background: #edf3f8; color: #17324d; font-weight: 800; }
+#recordsTable tbody tr:nth-child(even) { background: #f8fafc; }
+#recordsTable .db-row-selected { outline: 2px solid #346c9f; outline-offset: -2px; background: #edf6ff; }
+#recordsTable button { padding: 6px 10px; border: 1px solid #c3d1df; border-radius: 6px; cursor: pointer; background: #fff; color: #17324d; font-weight: 700; }
+.db-selected-label { font-size: .9rem; color: #475569; background: #f1f5f9; border-radius: 6px; padding: 7px 10px; }
+.db-editor-actions { margin-top: 20px; }
+.btn.danger { background: #a52c2c; color: #fff; border-color: #a52c2c; }
+#recordFields .field { min-width: 0; }
+#recordFields input, #recordFields textarea { width: 100%; box-sizing: border-box; }
+#recordFields textarea { min-height: 100px; resize: vertical; }
+#recordsSummary { margin-top: 14px; }
+@media (max-width: 700px) {
+  .db-warning { padding: 14px; }
+  #recordsTable th, #recordsTable td { padding: 8px; }
+  .db-editor-actions > button, .db-connect .db-actions > button { width: 100%; }
+}
