@@ -1,4 +1,9 @@
-# Horizon International School — OUM Introduction to Web Programming — Task 1
+# How to use this website
+1. Download as Zip file
+2. Unzip the file
+3. Open the MYwebsite folder as visual studio code (terminal)/ command prompt
+4. run the code (python database/server.py)
+5. You can enjoy this amazing website!
 
 ## Pages
 1. `index.html` — Home
